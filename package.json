@@ -1,0 +1,11 @@
+{
+  "name": "grm-twitch",
+  "version": "1.0.0",
+  "description": "Twitch live integration for Fivem",
+  "main": "server/twitch.js",
+  "author": "shkssj",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0"
+  }
+}
