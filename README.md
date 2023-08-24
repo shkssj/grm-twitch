@@ -3,7 +3,7 @@ Twitch live integration for Fivem
 
 # How to install
 - Download the script and drop in the resources folder
-- Install the packages executing install.bat 
+- Install the packages executing install.bat or using 'npm i' in the console
 - Open your server.cfg and add this: ensure grm-twitch
 - Go to: https://dev.twitch.tv/console/apps
 - Create a new application
