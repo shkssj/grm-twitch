@@ -1,58 +1,64 @@
-const client_id = 'YOUR_CLIENT_ID'
-const client_secret = 'YOUR_CLIENT_SECRET'
+const axios = require('axios');
+
+const client_id = 'YOUR_CLIENT_ID';
+const client_secret = 'YOUR_CLIENT_SECRET';
 
 let accessToken = '';
+
 async function checkTwitchLiveStatus(username, title) {
     async function getAccessToken() {
-      const response = await fetch(`https://id.twitch.tv/oauth2/token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          client_id: client_id,
-          client_secret: client_secret,
-          grant_type: 'client_credentials',
-        }),
-      });
-  
-      const data = await response.json();
-  
-      if (response.status === 200) {
-        accessToken = data.access_token
-      }
+        try {
+            const response = await axios.post('https://id.twitch.tv/oauth2/token', null, {
+                params: {
+                    client_id: client_id,
+                    client_secret: client_secret,
+                    grant_type: 'client_credentials',
+                },
+            });
+
+            if (response.status === 200) {
+                accessToken = response.data.access_token;
+            }
+        } catch (error) {
+            console.error('Error getting access token:', error.message);
+        }
     }
-  
+
     async function checkStreamStatus() {
-      const response = await fetch(`https://api.twitch.tv/helix/streams?user_login=${username}`, {
-        headers: {
-          'Client-ID': client_id,
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-  
-      const data = await response.json();
-  
-      if (response.status === 200 && data.data.length > 0) {
-        const streamTitle = data.data[0].title;
+        try {
+            const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=${username}`, {
+                headers: {
+                    'Client-ID': client_id,
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
 
-        if(title && !streamTitle.includes(title)) return 'live_not_title'
+            if (response.status === 200 && response.data.data.length > 0) {
+                const streamTitle = response.data.data[0].title;
 
-        return 'live'
-      } else {
-        return 'notlive';
-      }
+                if (title && !streamTitle.toLowerCase().includes(title)) {
+                    return 'live_not_title';
+                }
+
+                return 'live';
+            } else {
+                return 'notlive';
+            }
+        } catch (error) {
+            console.error('Error checking stream status:', error.message);
+            return 'error';
+        }
     }
-  
+
     async function runCheck() {
-      if (!accessToken || accessToken == '') {
-        await getAccessToken();
-      }
-  
-      return await checkStreamStatus();
+        if (!accessToken || accessToken === '') {
+            await getAccessToken();
+        }
+
+        return await checkStreamStatus();
     }
-  
+
     return runCheck();
-  }
+}
 
 exports('checkLive', checkTwitchLiveStatus)
