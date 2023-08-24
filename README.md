@@ -36,7 +36,7 @@ Use the export (checkLive) and use te guide of how to use it
     if response == 'live' then
         print('The streamer is in live')
     elseif response == 'live_not_title' then
-        print('The streamer is in live but the title don\'t include the word you provided')
+        print('The streamer is in live but the title doesn\'t include the word you provided')
     elseif response == 'notlive' then
         print('The streamer is not in live')
     end
