@@ -13,7 +13,7 @@ Twitch live integration for Fivem
 - Paste your application client id & client secret into the variables
 
 # How to import 
-Use the export (checkLive) and use te guide of how to use it
+Use the export (checkLive) and use the guide of how to use it
 
 # Functions
 ```lua
